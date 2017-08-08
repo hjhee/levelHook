@@ -10,7 +10,7 @@ from memory.hooks import PreHook
 secondaryWEaponName = [
     "knife",
     "baseball_bat",
-    "chainsaw",
+    # "chainsaw",
     "cricket_bat",
     "crowbar",
     "electric_guitar",
@@ -19,7 +19,7 @@ secondaryWEaponName = [
     "golfclub",
     "katana",
     "machete",
-    "riotshield",
+    # "riotshield",
     "tonfa",
     "weapon_pistol_magnum"
 ]
@@ -51,10 +51,12 @@ def load():
 
     @PreHook(UTIL_KeyValues_SetString)
     def _pre_keyvalues_set_string(args):
-        if args[1] == 'restoreSecondaryWeaponName' and not args[2] in secondaryWEaponName:
+        if args[1] == 'restoreSecondaryWeaponName':
             logging.info('server_srv.so!KeyValues::SetString({}, {}).'.format(args[1], args[2]))
             print('server_srv.so!KeyValues::SetString({}, {}).'.format(args[1], args[2]))
 
-            # sometimes value "weapon_chainsaw" occurres, could this crash the server?
-            print('invalid restoreSecondaryWeaponName: {}, set to {}'.format(args[2], "weapon_pistol_magnum")) # fallback value is "weapon_pistol_magnum"
-            args[2] = "weapon_pistol_magnum"
+            if not args[2] in secondaryWEaponName:
+                # sometimes value "weapon_chainsaw" occurres, could this crash the server?
+                logging.info('invalid restoreSecondaryWeaponName: {}, set to {}'.format(args[2], "weapon_pistol_magnum"))
+                print('invalid restoreSecondaryWeaponName: {}, set to {}'.format(args[2], "weapon_pistol_magnum")) # fallback value is "weapon_pistol_magnum"
+                args[2] = "weapon_pistol_magnum"
