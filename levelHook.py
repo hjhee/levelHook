@@ -10,7 +10,7 @@ from memory.hooks import PreHook
 secondaryWEaponName = [
     "knife",
     "baseball_bat",
-    # "chainsaw",
+    # "weapon_chainsaw", # not saving chainsaw for map transition
     "cricket_bat",
     "crowbar",
     "electric_guitar",
@@ -19,7 +19,7 @@ secondaryWEaponName = [
     "golfclub",
     "katana",
     "machete",
-    # "riotshield",
+    # "riotshield", # won't show up in normal case
     "tonfa",
     "weapon_pistol_magnum"
 ]
