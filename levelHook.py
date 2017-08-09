@@ -6,11 +6,11 @@ import logging
 import memory
 from memory import Convention, DataType
 from memory.hooks import PreHook
+import memory.helpers
+from memory.manager import TypeManager
 
 secondaryWEaponName = [
-    "knife",
     "baseball_bat",
-    # "weapon_chainsaw", # not saving chainsaw for map transition
     "cricket_bat",
     "crowbar",
     "electric_guitar",
@@ -18,9 +18,11 @@ secondaryWEaponName = [
     "frying_pan",
     "golfclub",
     "katana",
+    "knife",
     "machete",
-    # "riotshield", # won't show up in normal case
+    "riotshield", # won't show up in normal case
     "tonfa",
+    "weapon_chainsaw",
     "weapon_pistol_magnum"
 ]
 
@@ -45,18 +47,27 @@ def load():
 
     UTIL_KeyValues_SetString = server[identifier_KeyValues_SetString].make_function(
         Convention.THISCALL,
-        (DataType.POINTER, DataType.STRING, DataType.STRING),
+        (DataType.POINTER, DataType.STRING, DataType.POINTER), # KeyValues::SetString(KeyValues *this, const char *s, const char *)
         DataType.VOID
     )
 
     @PreHook(UTIL_KeyValues_SetString)
     def _pre_keyvalues_set_string(args):
         if args[1] == 'restoreSecondaryWeaponName':
-            logging.info('server_srv.so!KeyValues::SetString({}, {}).'.format(args[1], args[2]))
-            print('server_srv.so!KeyValues::SetString({}, {}).'.format(args[1], args[2]))
+            logging.info('setting restoreSecondaryWeaponName')
+            args[2] = "weapon_pistol_magnum"
+            return
 
-            if not args[2] in secondaryWEaponName:
+            # args[2] may be not NUL-terminated
+            value = memory.helpers.Array(TypeManager, false, "char", args[2], 20)
+            
+            weapon_name = args[2][:20] # not good enough
+
+            logging.info('server_srv.so!KeyValues::SetString({}, {}).'.format(args[1], weapon_name))
+            print('server_srv.so!KeyValues::SetString({}, {}).'.format(args[1], weapon_name))
+
+            if not weapon_name in secondaryWEaponName:
                 # sometimes value "weapon_chainsaw" occurres, could this crash the server?
-                logging.info('invalid restoreSecondaryWeaponName: {}, set to {}'.format(args[2], "weapon_pistol_magnum"))
-                print('invalid restoreSecondaryWeaponName: {}, set to {}'.format(args[2], "weapon_pistol_magnum")) # fallback value is "weapon_pistol_magnum"
+                logging.info('invalid restoreSecondaryWeaponName: {}, set to {}'.format(weapon_name, "weapon_pistol_magnum"))
+                print('invalid restoreSecondaryWeaponName: {}, set to {}'.format(weapon_name, "weapon_pistol_magnum")) # fallback value is "weapon_pistol_magnum"
                 args[2] = "weapon_pistol_magnum"
