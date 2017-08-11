@@ -1,4 +1,4 @@
-# ../levelHook/info.py
+# ../saveWeaponHook/info.py
 
 """Provides/stores information about the plugin."""
 

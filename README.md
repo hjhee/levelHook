@@ -1,7 +1,7 @@
-# levelHook
+# saveWeaponHook
 
-Hook `server_srv.so!PlayerSaveData::PlayerSaveData(CTerrorPlayer*, char const*)` and save to log for crash tracing.
+Hook `KeyValues::SetString(KeyValues *this, const char *s, const char *)` and save to log for crash tracing.
 
 ## Notice
 
-linux platform only, and plugin generates log file `levelHook.log` in game root folder.
+linux platform only, and plugin generates log file `saveWeaponHook.log` in game root folder.

@@ -1,4 +1,4 @@
-# ../levelHook/levelHook.py
+# ../saveWeaponHook/saveWeaponHook.py
 from .info import info
 from listeners import OnLevelInit
 import logging
@@ -39,15 +39,15 @@ def load():
     try:
         server = memory.find_binary('server')
     except:
-        print('[levelHook] find binary server failed!')
+        print('[saveWeaponHook] find binary server failed!')
         return
 
-    logging.basicConfig(filename='levelHook.log', format='%(asctime)s %(levelname)s %(message)s')
-    logging.info('plugin levelHook loaded.')
+    logging.basicConfig(filename='saveWeaponHook.log', format='%(asctime)s %(levelname)s %(message)s')
+    logging.info('plugin saveWeaponHook loaded.')
 
     UTIL_KeyValues_SetString = server[identifier_KeyValues_SetString].make_function(
         Convention.THISCALL,
-        (DataType.POINTER, DataType.STRING, DataType.POINTER), # KeyValues::SetString(KeyValues *this, const char *s, const char *)
+        (DataType.POINTER, DataType.STRING, DataType.STRING), # KeyValues::SetString(KeyValues *this, const char *s, const char *)
         DataType.VOID
     )
 
